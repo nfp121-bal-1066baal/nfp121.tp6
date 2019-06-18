@@ -2,51 +2,86 @@ package question1;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
+import question2.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class GroupeDeContributeurs extends Cotisant implements Iterable<Cotisant>{
+public class GroupeDeContributeurs extends Cotisant implements Iterable<Cotisant>, Cloneable{
   private List<Cotisant> liste;
   
   public GroupeDeContributeurs(String nomDuGroupe){
     super(nomDuGroupe);
-    // a completer
+    liste = new ArrayList<Cotisant>();
   }
   
   public void ajouter(Cotisant cotisant){
-    // a completer
+    cotisant.setParent(this);
+      liste.add(cotisant);
   }
   
   
   public int nombreDeCotisants(){
     int nombre = 0;
-    // a completer
+    for(Cotisant c:liste){
+        if(c instanceof Contributeur){
+            nombre++;
+        }else{
+            nombre+=((GroupeDeContributeurs)c).nombreDeCotisants();
+        }
+    }
     return nombre;
   }
   
   public String toString(){
     String str = new String();
-    // a completer
+    for(Cotisant c:liste){
+        if(c instanceof Contributeur){
+            str+=c.toString();
+        }else{
+            str+=((GroupeDeContributeurs)c).toString();
+        }
+    }
     return str;
   }
   
   public List<Cotisant> getChildren(){
-    return null;// a completer
+    return liste;
   }
   
   public void debit(int somme) throws SoldeDebiteurException{
-    // a completer
+      if(somme < 0||solde()<somme){throw new RuntimeException("Erreur en somme");}
+      if(new DebitMaximal().visite(this)<somme)
+        throw new SoldeDebiteurException("Erreur en somme");
+    for(Cotisant c:liste){
+        if(c instanceof Contributeur){
+            c.debit(somme);
+        }else{
+            ((GroupeDeContributeurs)c).debit(somme);
+        }
+    }
   }
   
   public void credit(int somme){
-    // a completer
+      if(somme < 0){throw new RuntimeException("Erreur en somme");}
+    for(Cotisant c:liste){
+        if(c instanceof Contributeur){
+            c.credit(somme);
+        }else{
+            ((GroupeDeContributeurs)c).credit(somme);
+        }
+    }
   }
   
   public int solde(){
     int solde = 0;
-    // a completer
+    for(Cotisant c:liste){
+        if(c instanceof Contributeur){
+            solde+=c.solde();
+        }else{
+            solde+=((GroupeDeContributeurs)c).solde();
+        }
+    }
     return solde;
   }
   
@@ -101,5 +136,18 @@ public class GroupeDeContributeurs extends Cotisant implements Iterable<Cotisant
     return visiteur.visite(this);
   }
   
+  public void setState(Cotisant c){
+    this.liste = ((GroupeDeContributeurs) c).getChildren();
+  }
+  
+  public Object clone()throws CloneNotSupportedException{
+      GroupeDeContributeurs gg = new GroupeDeContributeurs(this.nom);
+      for(Cotisant c: this.getChildren()){
+          if(c instanceof Contributeur) c= (Contributeur)((Contributeur)c).clone();
+          if(c instanceof GroupeDeContributeurs) c= (GroupeDeContributeurs)((GroupeDeContributeurs)c).clone();
+          gg.ajouter(c);
+      }
+      return gg;
+  }
 
 }

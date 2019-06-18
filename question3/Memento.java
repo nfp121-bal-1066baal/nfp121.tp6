@@ -9,12 +9,15 @@ public class Memento {
      //        d’un second pour la restitution du composite, 
      //        représentent une solution possible. 
      
+     private Cotisant c;
+     
      public Memento(Cotisant c) {
-       // sauvegarde
+       this.c=c;
      }
 
      public void setState(Cotisant c) {
-       // restitution
+       if(c instanceof Contributeur) ((Contributeur)c).setState(this.c);
+       if(c instanceof GroupeDeContributeurs) ((GroupeDeContributeurs)c).setState(this.c);
      }
     
     }

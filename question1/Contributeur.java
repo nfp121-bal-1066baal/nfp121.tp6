@@ -1,12 +1,14 @@
 package question1;
 
 
-public class Contributeur extends Cotisant{
+public class Contributeur extends Cotisant implements Cloneable{
   private int solde;
   
   public Contributeur(String nom, int somme){
     super(nom);
-    // a completer
+    
+     if(somme < 0){throw new RuntimeException("Erreur en somme");}
+     solde=somme;
   }
   
   public int solde(){
@@ -16,20 +18,22 @@ public class Contributeur extends Cotisant{
   public int nombreDeCotisants(){
     return 1;
   }
-	public void debit(int somme) throws SoldeDebiteurException{
-	  // a completer
-	}
-	
-	/**
-	 * throws RuntimeException new RuntimeException("nombre négatif !!!");
-	 */
+    public void debit(int somme) throws SoldeDebiteurException{
+      if(somme<0||solde < somme){ throw new SoldeDebiteurException("Erreur en solde");}
+      solde -= somme;
+    }
+    
+    /**
+     * throws RuntimeException new RuntimeException("nombre négatif !!!");
+     */
   public  void credit(int somme){
-	  // a completer
-	}
-	
-	/**
-	 * throws RuntimeException new RuntimeException("nombre négatif !!!");
-	 */
+      if(somme < 0){throw new RuntimeException("Erreur en somme");}
+          solde += somme;
+    }
+    
+    /**
+     * throws RuntimeException new RuntimeException("nombre négatif !!!");
+     */
   public void affecterSolde(int somme){
     // if(somme <0) throw new RuntimeException("nombre négatif !!!");
     try{
@@ -47,5 +51,10 @@ public class Contributeur extends Cotisant{
   public String toString(){
     return "<Contributeur : " + nom + "," + solde + ">";
   }
-
+  public void setState(Cotisant c){
+    this.solde=c.solde();
+  }
+  public Object clone()throws CloneNotSupportedException{
+      return super.clone();
+  }
 }
