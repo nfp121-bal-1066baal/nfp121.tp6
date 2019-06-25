@@ -1,8 +1,6 @@
 package question2;
-
-import question1.Contributeur;
-import question1.GroupeDeContributeurs;
-import question1.Visiteur;
+import java.util.*;
+import question1.*;
 
 public class DebitMaximal implements Visiteur<Integer>{
 
@@ -13,22 +11,26 @@ public class DebitMaximal implements Visiteur<Integer>{
   
   public Integer visite(GroupeDeContributeurs g){
     int res = 0;
-    for(int i=0;i<g.getChildren().size();i++){
+    List<Cotisant> l = g.getChildren();
+    for(int i=0;i<l.size();i++){
         if(i==0){
-            if(g.getChildren().get(0) instanceof Contributeur){
+            Cotisant c = l.get(0);
+            if(c instanceof Contributeur){
 
-                res=g.getChildren().get(0).solde();
+                res=c.solde();
             }
             else{
-                visite((GroupeDeContributeurs)g.getChildren().get(0));
+                visite((GroupeDeContributeurs)c);
             }
+            continue;
         }
-        if(g.getChildren().get(i) instanceof Contributeur){
-            if(res>g.getChildren().get(i).solde())
-                res=g.getChildren().get(i).solde();
+        if(l.get(i) instanceof Contributeur){
+            Cotisant c= l.get(i);
+            if(res>c.solde())
+                res=c.solde();
         }
         else{
-            visite((GroupeDeContributeurs)g.getChildren().get(i));
+            visite((GroupeDeContributeurs)l.get(i));
         }
     
     }

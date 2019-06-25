@@ -15,15 +15,23 @@ public class CompositeValide implements Visiteur<Boolean>{
   }
   
   public Boolean visite(GroupeDeContributeurs g){
-    boolean res = false;
+    boolean res = true;
     if(g.getChildren().size()==0)
-        return res;
+        res=false;
     else{
         for(Cotisant c:g.getChildren()){
-            if(c instanceof  Contributeur)
+            if(c instanceof  Contributeur){
+                
                 res=visite((Contributeur)c);
-            else
+                if(!res)
+                    break;
+            }
+            else{
+                
                 res=visite((GroupeDeContributeurs)c);
+                if(!res)
+                    break;
+            }
         }
     }
     return res ;

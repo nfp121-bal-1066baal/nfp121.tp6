@@ -24,11 +24,7 @@ public class GroupeDeContributeurs extends Cotisant implements Iterable<Cotisant
   public int nombreDeCotisants(){
     int nombre = 0;
     for(Cotisant c:liste){
-        if(c instanceof Contributeur){
-            nombre++;
-        }else{
-            nombre+=((GroupeDeContributeurs)c).nombreDeCotisants();
-        }
+        nombre+=((GroupeDeContributeurs)c).nombreDeCotisants();
     }
     return nombre;
   }
@@ -76,11 +72,7 @@ public class GroupeDeContributeurs extends Cotisant implements Iterable<Cotisant
   public int solde(){
     int solde = 0;
     for(Cotisant c:liste){
-        if(c instanceof Contributeur){
-            solde+=c.solde();
-        }else{
-            solde+=((GroupeDeContributeurs)c).solde();
-        }
+        solde+=c.solde();
     }
     return solde;
   }
